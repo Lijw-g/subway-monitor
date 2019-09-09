@@ -1,1 +1,25 @@
+spring:
+  application: subway/subway-monitor
+server:
+  port: 8080
+kafka:
+  consumer:
+    bootstrap-servers: 127.0.0.1:9092
+    enable-auto-commit: false
+    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      spring:
+        json:
+          trusted:
+            packages: com.vcredit.kafkademo.dto
+    group-id: demo
+  producer:
+    bootstrap-servers: 127.0.0.1:9092
+    retries: 0
+    batch-size: 4096
+    buffer-memory: 40960
+    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  listener:
+    ack-mode: manual_immediate
+    concurrency: 2
 
