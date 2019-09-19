@@ -29,24 +29,40 @@ public class KafkaConsumer {
     private MongoDbService mongoDbService;
     @Autowired
     private MongoTemplate mongoTemplate;
+
     /**
      * 监听kafka.tut 的topic，不做其他业务
      *
      * @param record
      * @param topic  topic
      */
-    @KafkaListener(id = "data",groupId="dataBase", topics = "test")
+    @KafkaListener(id = "data", groupId = "dataBase", topics = "test")
     public void listen(ConsumerRecord<?, ?> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
         if (kafkaMessage.isPresent()) {
-            Object message = kafkaMessage.get();
             Document document = new Document();
-            document.append("topic", topic).append("Record", record).append("mesage", message.toString());
+            String data = kafkaMessage.get().toString();
+            String xiyie = data.substring(0, 4);
+            String len = data.substring(4, 8);
+            String diviceId = data.substring(8, 22);
+            String mingling = data.substring(22, 26);
+            String datas = data.substring(26, 76);
+            //处理传输的数据
+
+            String crc16 = data.substring(76, 80);
+            String end = data.substring(80, 84);
+
+
+            document.append("xiyie", xiyie).append("len", len).append("diviceId", diviceId).append("mingling", mingling)
+                    .append("Type", "01").append("JZdata", datas.substring(2, 10)).append("M_Vstate", "110.53").append("M_Astate", "-1.33")
+                    .append("M_Tstate", "23.02").append("D_Vstate", "10.18").append("D_Astate", "-1.09")
+                    .append("D_Tstate", "33.84").append("Degree", "0.21").append("crc16", crc16).append("end", end);
             mongoTemplate.insert(document, "subwayData");
             logger.info("Receive： +++++++monitor++++++++ Topic:" + topic);
             logger.info("Receive： ++++++++monitor+++++++ Record:" + record);
-            logger.info("Receive： ++++++++monitor+++++++ Message:" + message);
+            logger.info("Receive： ++++++++monitor+++++++ Message:" + data);
         }
     }
+
 
 }
