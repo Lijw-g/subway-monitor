@@ -1,6 +1,14 @@
 spring:
   application:
     name: subway-monitor
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: subway
+#    username:
+#    password:
+#    uri: mongodb://mall_log:FDxUEGprQ0R9@10.16.208.238:27018/mall_log
   kafka:
     # 指定kafka 代理地址，可以多个
     bootstrap-servers: 127.0.0.1:9092
@@ -25,6 +33,7 @@ spring:
     # 指定listener 容器中的线程数，用于提高并发量
     listener:
       concurrency: 3
-
+server:
+  port: 8003
   profiles:
     active: dev
