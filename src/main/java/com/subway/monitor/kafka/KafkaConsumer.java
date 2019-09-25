@@ -14,6 +14,9 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.Scanner;
+
+import static java.lang.System.in;
 
 /**
  * 消息消费者
@@ -41,28 +44,60 @@ public class KafkaConsumer {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
         if (kafkaMessage.isPresent()) {
             Document document = new Document();
-            String data = kafkaMessage.get().toString();
+            String data = String.valueOf(kafkaMessage.get()).replace("\"","");
             String xiyie = data.substring(0, 4);
             String len = data.substring(4, 8);
             String diviceId = data.substring(8, 22);
             String mingling = data.substring(22, 26);
             String datas = data.substring(26, 76);
             //处理传输的数据
-
+            String M_Vstate=getStatusValue(datas.substring(10,16));
+            String M_Astate=getStatusValue(datas.substring(16,22));
+            String M_Tstate=getStatusValue(datas.substring(22,28));
+            String D_Vstate=getStatusValue(datas.substring(28,34));
+            String D_Astate=getStatusValue(datas.substring(34,40));
+            String D_Tstate=getStatusValue(datas.substring(40,46));
+            String Degree=getDegreeValue(datas.substring(46,50));
             String crc16 = data.substring(76, 80);
             String end = data.substring(80, 84);
-
-
-            document.append("xiyie", xiyie).append("len", len).append("diviceId", diviceId).append("mingling", mingling)
-                    .append("Type", "01").append("JZdata", datas.substring(2, 10)).append("M_Vstate", "110.53").append("M_Astate", "-1.33")
-                    .append("M_Tstate", "23.02").append("D_Vstate", "10.18").append("D_Astate", "-1.09")
-                    .append("D_Tstate", "33.84").append("Degree", "0.21").append("crc16", crc16).append("end", end);
+            logger.info ("---门控器电压："+M_Vstate+"V");
+            logger.info ("---电流："+M_Astate+"A");
+            logger.info ("---温度："+M_Tstate+"℃");
+            logger.info ("---门电机电压："+D_Vstate+"V");
+            logger.info ("---电流："+D_Astate+"A");
+            logger.info ("---温度："+D_Tstate+"℃");
+            logger.info ("---门开度："+Degree+"m");
+            document.append("xiyie", xiyie).append("len", Long.parseLong(len,16)).append("diviceId", diviceId).append("mingling", mingling)
+                    .append("Type", "01").append("JZdata", datas.substring(2, 10)).append("M_Vstate", M_Vstate).append("M_Astate", M_Astate)
+                    .append("M_Tstate", M_Tstate).append("D_Vstate", D_Vstate).append("D_Astate", D_Astate)
+                    .append("D_Tstate", D_Tstate).append("Degree", Degree).append("crc16", crc16).append("end", end);
             mongoTemplate.insert(document, "subwayData");
-            logger.info("Receive： +++++++monitor++++++++ Topic:" + topic);
-            logger.info("Receive： ++++++++monitor+++++++ Record:" + record);
-            logger.info("Receive： ++++++++monitor+++++++ Message:" + data);
         }
     }
+    public static String getStatusValue(String data){
+        Long fuhao=Long.parseLong(data.substring(0,2),16);
+        Long zhengshu = Long.parseLong(data.substring(2,4),16);
+        Long xiaoshu = Long.parseLong(data.substring(4, 6),16);
+        if (xiaoshu<10){}
+        StringBuilder value = new StringBuilder();
+        if (fuhao==0L){
+            value.append("-");
+        }
+        if (xiaoshu<10L){
+            value.append(zhengshu).append('.').append("0"+xiaoshu);
 
+        }
+        else {
+            value.append(zhengshu).append('.').append(xiaoshu);
 
+        }
+        return value.toString();
+    }
+    public static String getDegreeValue(String data){
+        Long zhengshu = Long.parseLong(data.substring(0,2),16);
+        Long xiaoshu = Long.parseLong(data.substring(2, 4),16);
+        StringBuilder value = new StringBuilder();
+        value.append(zhengshu).append('.').append(xiaoshu);
+        return value.toString();
+    }
 }

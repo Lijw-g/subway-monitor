@@ -19,23 +19,23 @@ import java.util.Optional;
 @Component
 public class FlinkService {
 
-    private Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
-
-    /**
-     * 监听kafka.tut 的topic，不做其他业务
-     *
-     * @param record
-     * @param topic  topic
-     */
-    @KafkaListener(groupId="ff", topics = "test")
-    public void listen(ConsumerRecord<?, ?> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        Optional<?> kafkaMessage = Optional.ofNullable(record.value());
-        if (kafkaMessage.isPresent()) {
-            Object message = kafkaMessage.get();
-            logger.info("Receive： +++++++flink++++++++ Topic:" + topic);
-            logger.info("Receive： ++++++++flink+++++++ Record:" + record);
-            logger.info("Receive： ++++++++flink+++++++ Message:" + message);
-        }
-    }
+//    private Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
+//
+//    /**
+//     * 监听kafka.tut 的topic，不做其他业务
+//     *
+//     * @param record
+//     * @param topic  topic
+//     */
+//    @KafkaListener(groupId="ff", topics = "test")
+//    public void listen(ConsumerRecord<?, ?> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+//        Optional<?> kafkaMessage = Optional.ofNullable(record.value());
+//        if (kafkaMessage.isPresent()) {
+//            Object message = kafkaMessage.get();
+//            logger.info("Receive： +++++++flink++++++++ Topic:" + topic);
+//            logger.info("Receive： ++++++++flink+++++++ Record:" + record);
+//            logger.info("Receive： ++++++++flink+++++++ Message:" + message);
+//        }
+//    }
 
 }
