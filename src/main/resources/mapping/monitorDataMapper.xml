@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="monitorData">
+
+    <insert id="insert" parameterType="monitorData">
+        <![CDATA[
+                INSERT INTO monitor_data (xieyi, length, deviceId, command, m_vstate, m_astate, m_tstate, d_vstate, d_astate, d_tstate, degree, crc_code)
+                 VALUES (#{xieyi},#{length},#{deviceId},#{command},#{mVstate},#{mAstate},#{mTstate},#{dVstate},#{dAstate},#{dTstate},#{degree},#{crcCode})
+        ]]>
+    </insert>
+</mapper>
