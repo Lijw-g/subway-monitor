@@ -18,10 +18,6 @@ target/
 *.iws
 *.iml
 *.ipr
-*.name
-*.liraries
-
-
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -32,3 +28,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/mvnw
+/.mvn/
