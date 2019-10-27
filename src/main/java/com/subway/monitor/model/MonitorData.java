@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 public class MonitorData {
 
     private long id;
-    private String xieyi;
+    private String agreement;
     private long length;
     private String deviceId;
     private String command;

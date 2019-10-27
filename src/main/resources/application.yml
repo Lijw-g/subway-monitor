@@ -1,11 +1,11 @@
 spring:
   application:
     name: subway-monitor
-  data:
-    mongodb:
-      host: 127.0.0.1
-      port: 27017
-      database: subway
+#  data:
+#    mongodb:
+#      host: 127.0.0.1
+#      port: 27017
+#      database: subway
   datasource:
     name: subwayData
     url: jdbc:mysql://127.0.0.1:3306/subwayData
@@ -41,7 +41,7 @@ mybatis:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     # 指定listener 容器中的线程数，用于提高并发量
     listener:
-      concurrency: 3
+      concurrency: 6
 server:
   port: 8003
   profiles:

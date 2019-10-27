@@ -2,12 +2,11 @@ package com.subway.monitor.kafka;
 
 import com.subway.monitor.model.MonitorData;
 import com.subway.monitor.service.MonitorDataService;
+import com.subway.monitor.utils.DataUtil;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
@@ -22,9 +21,9 @@ import java.util.Optional;
  * @date 2018/8/3
  */
 @Component
-public class KafkaConsumer {
+public class CoreDataConsumer {
 
-    private Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
+    private Logger logger = LoggerFactory.getLogger(CoreDataConsumer.class);
     //    @Autowired
 //    private MongoTemplate mongoTemplate;
     @Autowired
@@ -36,14 +35,13 @@ public class KafkaConsumer {
      * @param record
      * @param topic  topic
      */
-    @KafkaListener(id = "data", groupId = "dataBase", topics = "test")
+    @KafkaListener(id = "data", groupId = "dataBase", topics = "core_data_topic")
     public void listen(ConsumerRecord<?, ?> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
         if (kafkaMessage.isPresent()) {
-            Document document = new Document();
             String data = String.valueOf(kafkaMessage.get()).replace("\"", "");
-            String xieyi = data.substring(0, 4);
-            String len = data.substring(4, 8);
+            String agreement = data.substring(0, 4);
+            Integer len = DataUtil.getDataSize(data.substring(4, 8));
             String deviceId = data.substring(8, 22);
             String mingling = data.substring(22, 26);
             String datas = data.substring(26, 76);
@@ -57,8 +55,8 @@ public class KafkaConsumer {
             String degree = getDegreeValue(datas.substring(46, 50));
             String crc16 = data.substring(76, 80);
             String end = data.substring(80, 84);
-            MonitorData monitorData = new MonitorData().setXieyi(xieyi)
-                    .setLength(Long.valueOf(Long.parseLong(len, 16)))
+            MonitorData monitorData = new MonitorData().setAgreement(agreement)
+                    .setLength(len)
                     .setDeviceId(deviceId)
                     .setCommand(mingling)
                     .setMVstate(M_Vstate)

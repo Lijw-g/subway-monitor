@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="geographicalData">
+
+    <insert id="insert" parameterType="geographicalData">
+        <![CDATA[
+                INSERT INTO geographical_data (date, time ,lat,lng,speed,direction,sign )
+                 VALUES (#{date},#{time},#{lat},#{lng},#{speed},#{direction},#{sign})
+        ]]>
+    </insert>
+</mapper>

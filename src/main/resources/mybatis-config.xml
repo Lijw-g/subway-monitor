@@ -11,6 +11,8 @@
 
     <typeAliases>
         <typeAlias type="com.subway.monitor.model.MonitorData" alias="monitorData"/>
+        <typeAlias type="com.subway.monitor.model.HeartData" alias="heartData"/>
+        <typeAlias type="com.subway.monitor.model.GeographicalData" alias="geographicalData"/>
     </typeAliases>
 
     <typeHandlers>
