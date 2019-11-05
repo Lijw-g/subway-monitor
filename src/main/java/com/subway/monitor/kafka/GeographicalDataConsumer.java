@@ -27,7 +27,7 @@ public class GeographicalDataConsumer {
     private GeographicalDataService geographicalDataService;
     private Logger logger = LoggerFactory.getLogger(GeographicalDataConsumer.class);
 
-    @KafkaListener(groupId = "geographical",id = "geo",topics = "geographical_topic")
+    @KafkaListener(groupId = "geographical", id = "geo", topics = "railway_geographical_topic")
     public void listen(ConsumerRecord<?, ?> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
         if (kafkaMessage.isPresent()) {
@@ -40,20 +40,20 @@ public class GeographicalDataConsumer {
             String speed = buildSpeed(data.substring(28, 32));
             String direction = buildDirection(data.substring(32, 36));
             /**
-            标志为0F，表示0x0F，表示东经，北纬，3D定位(
-            1字节十六进制数，GPS状态字
-            Bit0     1—东经，0—西经。
-            Bit1     1—北纬，0—南纬。
-            Bit2-3   00---未定位01---2D定位 11---3D定位
-            Bit4-7 保留。 )*/
-            String sign = String.valueOf(Long.parseLong(data.substring(36, 37),16));
+             标志为0F，表示0x0F，表示东经，北纬，3D定位(
+             1字节十六进制数，GPS状态字
+             Bit0     1—东经，0—西经。
+             Bit1     1—北纬，0—南纬。
+             Bit2-3   00---未定位01---2D定位 11---3D定位
+             Bit4-7 保留。 )*/
+            String sign = String.valueOf(Long.parseLong(data.substring(36, 37), 16));
             GeographicalData geographicalData = new GeographicalData();
             geographicalData.setDate(date)
-            .setTime(time)
-            .setLat(lat)
-            .setLng(lng)
-            .setSpeed(speed)
-            .setDirection(direction).setSign(sign);
+                    .setTime(time)
+                    .setLat(lat)
+                    .setLng(lng)
+                    .setSpeed(speed)
+                    .setDirection(direction).setSign(sign);
             geographicalDataService.createData(geographicalData);
         }
 
@@ -65,7 +65,7 @@ public class GeographicalDataConsumer {
         DecimalFormat df = new DecimalFormat("#.00");
         dir.append(dateInfo.substring(2, 4));
         dir.append(dateInfo.substring(0, 2));
-        long speed = Long.parseLong(dir.toString(), 16) ;
+        long speed = Long.parseLong(dir.toString(), 16);
         double speedNum = Double.valueOf(speed) / 10;
         return df.format(speedNum);
     }
@@ -75,8 +75,8 @@ public class GeographicalDataConsumer {
         StringBuilder data = new StringBuilder();
         data.append(speedstring.substring(2, 4));
         data.append(speedstring.substring(0, 2));
-        long speed = Long.parseLong(data.toString(), 16) ;
-        double speedNum = Double.valueOf(speed)*3600 / 100000;
+        long speed = Long.parseLong(data.toString(), 16);
+        double speedNum = Double.valueOf(speed) * 3600 / 100000;
         return String.valueOf(speedNum);
     }
 
@@ -98,7 +98,7 @@ public class GeographicalDataConsumer {
         data.append(latString.substring(4, 6));
         data.append(latString.substring(2, 4));
         data.append(latString.substring(0, 2));
-        long lat = Long.parseLong(data.toString(), 16) ;
+        long lat = Long.parseLong(data.toString(), 16);
         return Double.valueOf(lat) / 3600000;
     }
 

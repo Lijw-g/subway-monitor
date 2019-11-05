@@ -33,6 +33,14 @@ public class DataUtil {
         return ints;
     }
 
+
+    /**
+     * @return java.lang.Integer
+     * @author: Lijiwen
+     * Description:
+     * @param: * @param sizeStrinng
+     * @createDate 2019-11-04 22:40
+     **/
     public static Integer getDataSize(String sizeStrinng) {
         int hight = Integer.parseInt(sizeStrinng.substring(2, 4), 16);
         int low = Integer.parseInt(sizeStrinng.substring(0, 2), 16);

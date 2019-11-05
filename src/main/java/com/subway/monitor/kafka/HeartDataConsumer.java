@@ -33,7 +33,7 @@ public class HeartDataConsumer {
      * @param record
      * @param topic  topic
      */
-    @KafkaListener(groupId="heart",id = "heart",topics = "heart_topic")
+    @KafkaListener(groupId = "heart", id = "heart", topics = "railway_heart_topic")
     public void listen(ConsumerRecord<?, ?> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
         if (kafkaMessage.isPresent()) {

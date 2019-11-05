@@ -29,13 +29,13 @@ public class CRC16Util {
         return CRC;
     }
 
-     public  static  String creatCrc16_s(String data){
-         int [] datas=DataUtil.creatDateInt(data);
-         int crcResult = get_crc16(datas, datas.length);
-         StringBuilder sb = new StringBuilder();
-         sb.append(Integer.toHexString( crcResult & 0x000000ff));
-         sb.append(Integer.toHexString(   crcResult>>8));
-         return sb.toString();
-     }
+    public static String creatCrc16_s(String data) {
+        int[] datas = DataUtil.creatDateInt(data);
+        int crcResult = get_crc16(datas, datas.length);
+        StringBuilder sb = new StringBuilder();
+        sb.append(Integer.toHexString(crcResult & 0x000000ff));
+        sb.append(Integer.toHexString(crcResult >> 8));
+        return sb.toString();
+    }
 
 }

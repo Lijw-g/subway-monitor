@@ -1,7 +1,6 @@
 package com.subway.monitor.service;
 
 
-
 import com.subway.monitor.api.JsonMapper;
 import com.subway.monitor.api.MapperBuilder;
 import org.apache.ibatis.session.SqlSession;

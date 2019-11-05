@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * @create: 2019-10-27 21:40
  **/
 @Service
-public class GeographicalDataService extends  AbstractService {
+public class GeographicalDataService extends AbstractService {
     public int createData(GeographicalData geographicalData) {
         return sqlSession.insert("geographicalData.insert", geographicalData);
     }

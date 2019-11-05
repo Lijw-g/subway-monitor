@@ -24,8 +24,6 @@ import java.util.Optional;
 public class CoreDataConsumer {
 
     private Logger logger = LoggerFactory.getLogger(CoreDataConsumer.class);
-    //    @Autowired
-//    private MongoTemplate mongoTemplate;
     @Autowired
     private MonitorDataService monitorDataService;
 
@@ -35,7 +33,7 @@ public class CoreDataConsumer {
      * @param record
      * @param topic  topic
      */
-    @KafkaListener(id = "data", groupId = "dataBase", topics = "core_data_topic")
+    @KafkaListener(id = "data", groupId = "dataBase", topics = "railway_core_data_topic")
     public void listen(ConsumerRecord<?, ?> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
         if (kafkaMessage.isPresent()) {
@@ -44,17 +42,17 @@ public class CoreDataConsumer {
             Integer len = DataUtil.getDataSize(data.substring(4, 8));
             String deviceId = data.substring(8, 22);
             String mingling = data.substring(22, 26);
-            String datas = data.substring(26, 76);
+            String datas = data.substring(26, 84);
             //处理传输的数据
-            String M_Vstate = getStatusValue(datas.substring(10, 16));
-            String M_Astate = getStatusValue(datas.substring(16, 22));
-            String M_Tstate = getStatusValue(datas.substring(22, 28));
-            String D_Vstate = getStatusValue(datas.substring(28, 34));
-            String D_Astate = getStatusValue(datas.substring(34, 40));
-            String D_Tstate = getStatusValue(datas.substring(40, 46));
-            String degree = getDegreeValue(datas.substring(46, 50));
-            String crc16 = data.substring(76, 80);
-            String end = data.substring(80, 84);
+            Integer type = Integer.parseInt(datas.substring(0, 2));
+            String JZ_data = datas.substring(2, 18);
+            String M_Vstate = getStatusValue(datas.substring(18, 24));
+            String M_Astate = getStatusValue(datas.substring(24, 30));
+            String M_Tstate = getStatusValue(datas.substring(30, 36));
+            String D_Vstate = getStatusValue(datas.substring(36, 42));
+            String D_Astate = getStatusValue(datas.substring(42, 48));
+            String D_Tstate = getStatusValue(datas.substring(48, 54));
+            String degree = getDegreeValue(datas.substring(54, 58));
             MonitorData monitorData = new MonitorData().setAgreement(agreement)
                     .setLength(len)
                     .setDeviceId(deviceId)
@@ -65,8 +63,7 @@ public class CoreDataConsumer {
                     .setDVstate(D_Vstate)
                     .setDAstate(D_Astate)
                     .setDTstate(D_Tstate)
-                    .setDegree(degree)
-                    .setCrcCode(crc16);
+                    .setDegree(degree);
             logger.info("---门控器电压：" + M_Vstate + "V");
             logger.info("---电流：" + M_Astate + "A");
             logger.info("---温度：" + M_Tstate + "℃");
@@ -75,12 +72,7 @@ public class CoreDataConsumer {
             logger.info("---温度：" + D_Tstate + "℃");
             logger.info("---门开度：" + degree + "m");
             int result = monitorDataService.createData(monitorData);
-            logger.info("add result is "+(result==1));
-//            document.append("xiyie", xieyi).append("len", Long.parseLong(len, 16)).append("diviceId", deviceId).append("mingling", mingling)
-//                    .append("Type", "01").append("JZdata", datas.substring(2, 10)).append("M_Vstate", M_Vstate).append("M_Astate", M_Astate)
-//                    .append("M_Tstate", M_Tstate).append("D_Vstate", D_Vstate).append("D_Astate", D_Astate)
-//                    .append("D_Tstate", D_Tstate).append("Degree", degree).append("crc16", crc16).append("end", end);
-//             mongoTemplate.insert(document, "subwayData");
+            logger.info("add result is " + (result == 1));
         }
     }
 
