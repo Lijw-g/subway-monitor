@@ -1,6 +1,5 @@
 package com.subway.monitor.utils;
 
-
 public class CRC16Util {
 
     public static int get_crc16(int[] bufData, int buflen) {
@@ -33,9 +32,19 @@ public class CRC16Util {
         int[] datas = DataUtil.creatDateInt(data);
         int crcResult = get_crc16(datas, datas.length);
         StringBuilder sb = new StringBuilder();
-        sb.append(Integer.toHexString(crcResult & 0x000000ff));
-        sb.append(Integer.toHexString(crcResult >> 8));
-        return sb.toString();
-    }
+        String low = Integer.toHexString(crcResult & 0x000000ff);
+        if (low.length() < 2) {
+            sb.append("0").append(low);
+        } else {
+            sb.append(low);
+        }
 
+        String hight = Integer.toHexString(crcResult >> 8);
+        if (hight.length() < 2) {
+            sb.append("0").append(hight);
+        } else {
+            sb.append(hight);
+        }
+        return sb.toString().toUpperCase();
+    }
 }
